@@ -18,7 +18,8 @@ export class AppComponent {
 
   @Output()
   public deg = 0;
-
+  @Output()
+  public currentPosition = { x: 0, y: 0 };
   public ngAfterViewInit(): void {
     this.increment();
   }
@@ -41,7 +42,8 @@ export class AppComponent {
     point: Point,
     dragRef: DragRef
   ): Point => {
-    const parent = dragRef.data.element.nativeElement.parentElement;
+    //const parent = dragRef.data.element.nativeElement.parentElement;
+    const parent = document.getElementById("containerId");
     const parentOffset = this.getPosition(parent);
     const translatedPoint = {
       x: point.x - parentOffset.x,
@@ -56,8 +58,8 @@ export class AppComponent {
     const rad = Math.atan2(cPoint.y - center.y, cPoint.x - center.x);
     // viewer point on circle
     const intersectionPoint = {
-      x: center.x + radius * Math.cos(rad) + parentOffset.x,
-      y: center.y - radius * Math.sin(rad) + parentOffset.y
+      x: center.x + radius * Math.cos(rad) + parentOffset.x - 20,
+      y: center.y - radius * Math.sin(rad) + parentOffset.y - 20
     };
 
     // notify change in angle
@@ -78,7 +80,7 @@ export class AppComponent {
   }
 
   increment() {
-    this.deg += 30;
+    this.deg += 1;
     const rad = (this.deg / 180) * Math.PI;
     const parent = document.getElementById("containerId");
     const d = document.getElementById("dragHandleId");
@@ -87,13 +89,11 @@ export class AppComponent {
       const h = parent.clientHeight;
       const center = { x: w / 2, y: h / 2 };
       const radius = Math.min(w, h) * 0.3; // align with position of white dot
-      const x = center.x + radius * Math.cos(rad);
-      const y = center.y - radius * Math.sin(rad);
+      const x = +radius * Math.cos(rad) - d.clientWidth;
+      const y = -radius * Math.sin(rad) - d.clientHeight;
 
-      console.log(`center ${center.x}, ${center.x}`);
-
-      d.style.left = `${x}px`;
-      d.style.top = `${y}px`;
+      console.log(`center ${center.x}, ${center.x} new pos: ${x} ${y}`);
+      this.currentPosition = { x: x, y: y };
     }
   }
 }
