@@ -84,8 +84,8 @@ export class AppComponent {
     const radius = Math.min(w, h) * 0.3;
     const rad = (this.deg / 180) * Math.PI;
 
-    d.style.left += 10
-    d.style.top += 10
+    d.style.left += "100px"
+    d.style.top += "100px"
     
   }
 
