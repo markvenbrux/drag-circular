@@ -81,11 +81,11 @@ export class AppComponent {
     const w = el.clientWidth;
     const h = el.clientHeight;
     const center = { x: w / 2, y: h / 2 };
-    const radius = Math.min(w, h) * 0.3;
+    const radius = Math.min(w, h) * 0.3; 
     const rad = (this.deg / 180) * Math.PI;
 
-    d.style.left += "100px"
-    d.style.top += "100px"
+    d.style.left += "10px"
+    d.style.top += "10px"
     
   }
 
