@@ -19,6 +19,10 @@ export class AppComponent {
   @Output()
   public deg = 0;
 
+  public ngAfterViewInit(): void {
+    this.increment();
+  }
+
   /**
    * Customize the logic of how the position of the drag item is limited while it's being dragged.
    * @param  point current position of the user's pointer on the page
@@ -74,20 +78,20 @@ export class AppComponent {
   }
 
   increment() {
-    this.deg += 10;
-    const rad = this.deg/180*Math.PI;
+    this.deg += 30;
+    const rad = (this.deg / 180) * Math.PI;
     const parent = document.getElementById("containerId");
     const d = document.getElementById("dragHandleId");
     if (parent && d) {
-    const w = parent.clientWidth;
-    const h = parent.clientHeight;
-    const center = { x: w / 2, y: h / 2 };
-    const radius = Math.min(w, h) * 0.3; // align with position of white dot
-      const x= center.x + radius * Math.cos(rad) ;
-      const y= center.y - radius * Math.sin(rad);
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      const center = { x: w / 2, y: h / 2 };
+      const radius = Math.min(w, h) * 0.3; // align with position of white dot
+      const x = center.x + radius * Math.cos(rad);
+      const y = center.y - radius * Math.sin(rad);
 
-      d.style.left = `${x}px`; 
-      d.style.top              = `${y}px`; 
+      d.style.left = `${x}px`;
+      d.style.top = `${y}px`;   
     }
   }
 }
