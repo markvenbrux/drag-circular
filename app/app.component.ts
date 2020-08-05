@@ -90,8 +90,10 @@ export class AppComponent {
       const x = center.x + radius * Math.cos(rad);
       const y = center.y - radius * Math.sin(rad);
 
+      console.log(`center ${center.x}, ${center.x}`);
+
       d.style.left = `${x}px`;
-      d.style.top = `${y}px`;   
+      d.style.top = `${y}px`;
     }
   }
 }
