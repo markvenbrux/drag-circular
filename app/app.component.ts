@@ -6,7 +6,7 @@ import {
   ViewChild
 } from "@angular/core";
 import { CdkDrag, DragRef } from "@angular/cdk/drag-drop";
-import { Point } from '@angular/cdk/drag-drop/typings/drag-ref';
+import { Point } from "@angular/cdk/drag-drop/typings/drag-ref";
 import { Subscription, Subject } from "rxjs";
 @Component({
   selector: "material-app",
@@ -71,22 +71,23 @@ export class AppComponent {
       el = el.offsetParent as HTMLElement;
     }
     return { x: x, y: y };
-  };
+  }
 
   increment() {
     this.deg += 10;
-    const el = document.getElementById("containerId");
-    const d =  document.getElementById("dragHandleId");
-    const topLeft = this.getPosition(el);
-    const w = el.clientWidth;
-    const h = el.clientHeight;
+    const rad = this.deg/180*Math.PI;
+    const parent = document.getElementById("containerId");
+    const d = document.getElementById("dragHandleId");
+    if (parent && d) {
+    const w = parent.clientWidth;
+    const h = parent.clientHeight;
     const center = { x: w / 2, y: h / 2 };
-    const radius = Math.min(w, h) * 0.3; 
-    const rad = (this.deg / 180) * Math.PI;
+    const radius = Math.min(w, h) * 0.3; // align with position of white dot
+      const x= center.x + radius * Math.cos(rad) ;
+      const y= center.y - radius * Math.sin(rad);
 
-    d.style.left += "10px"
-    d.style.top += "10px"
-    
+      d.style.left = `${x}px`; 
+      d.style.top              = `${y}px`; 
+    }
   }
-
 }
