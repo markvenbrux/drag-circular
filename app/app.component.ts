@@ -88,7 +88,7 @@ export class AppComponent {
   getRadius(): number {
     const parent = document.getElementById("containerId");
     const visualDragHandle = document.getElementById("visualDragHandleId");
-    if (parent && visualDragHandle ) {
+    if (parent && visualDragHandle && visualDragHandle.offsetLeft) {
       const center = { x: parent.clientWidth / 2, y: parent.clientHeight / 2 };
       const p = {
         x: visualDragHandle.offsetLeft - visualDragHandle.clientWidth / 2,
