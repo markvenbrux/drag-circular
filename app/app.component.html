@@ -1,14 +1,14 @@
-<div class="example-boundary"></div>
+<!-- <div class="example-boundary"></div> -->
 <span>{{deg}}</span>
 <button (click)="increment()">+10</button>
-<div id="containerId" class="example-boundary">
+<div id="crossSectionContainerId" class="example-boundary">
 	<svg class="svg" top="10%" [style.transform]="'rotate(' + -1*deg + 'deg)'">
 		<line x1="20%" y1="50%" x2="80%" y2="50%" style="stroke:rgb(255,0,0);stroke-width:2" />
 		<line x1="80%" y1="50%" x2="77%" y2="47%" style="stroke:rgb(255,0,0);stroke-width:2" />
 		<line x1="80%" y1="50%" x2="77%" y2="53%" style="stroke:rgb(255,0,0);stroke-width:2" />
-		<circle id="visualDragHandleId" cx="70%" cy="50%" r="15" stroke="black" stroke-width="3" fill="red" />
+		<circle id="visualcrossSectiondragHandleId" cx="70%" cy="50%" r="15" stroke="black" stroke-width="3" fill="red" />
 	</svg>
-	<div id="dragHandleId" class="drag-handle" cdkDrag
+	<div id="crossSectiondragHandleId" class="drag-handle" cdkDrag
   [cdkDragConstrainPosition]="constrainDragPositionToCircle"
   [cdkDragFreeDragPosition]="currentPosition">
 	</div>

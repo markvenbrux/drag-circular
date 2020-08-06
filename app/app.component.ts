@@ -16,9 +16,8 @@ import { Subscription, Subject } from "rxjs";
 export class AppComponent {
   public deg$ = new Subject<number>();
 
-  @Output()
-  public deg = 90;
-  public radius = 0;
+  private deg = 90;
+  private radius = 0;
   @Output()
   public currentPosition = { x: 0, y: 0 };
   public ngAfterViewInit(): void {
@@ -43,7 +42,7 @@ export class AppComponent {
     point: Point,
     dragRef: DragRef
   ): Point => {
-    const parent = document.getElementById("containerId");
+    const parent = document.getElementById("crossSectionContainerId");
     const parentOffset = this.getPosition(parent);
     const translatedPoint = {
       x: point.x - parentOffset.x,
@@ -105,16 +104,16 @@ export class AppComponent {
     }
   }
   private getRadiusOfVisualDragHandle(): number {
-    const parent = document.getElementById("containerId");
-    const visualDragHandle = document.getElementById("visualDragHandleId");
+    const parent = document.getElementById("crossSectionContainerId");
+    const visualDragHandle = document.getElementById("visualcrossSectiondragHandleId");
     const v = this.getVector(parent, visualDragHandle);
     return Math.sqrt(v.x * v.x + v.y * v.y);
   }
 
   private positionDragHandleOnCircle() {
     const rad = (this.deg / 180) * Math.PI;
-    const parent = document.getElementById("containerId");
-    const d = document.getElementById("dragHandleId");
+    const parent = document.getElementById("crossSectionContainerId");
+    const d = document.getElementById("crossSectiondragHandleId");
     if (parent && d) {
       const w = parent.clientWidth;
       const h = parent.clientHeight;
