@@ -5,7 +5,7 @@ import {
   EventEmitter,
   ViewChild
 } from "@angular/core";
-import { CdkDrag, DragRef, Point } from "@angular/cdk/drag-drop";
+import { CdkDrag, DragRef } from "@angular/cdk/drag-drop";
 import { Point } from "@angular/cdk/drag-drop/typings/drag-ref";
 import { Subscription, Subject } from "rxjs";
 @Component({
@@ -39,10 +39,10 @@ export class AppComponent {
    * - @this.deg$ is notified
    */
   public constrainDragPositionToCircle = (
-    point: Point,
-    dragRef: DragRef
+    point: Point
   ): Point => {
     const parent = document.getElementById("crossSectionContainerId");
+    const parentRect = parent.getBoundingClientRect();
     const parentOffset = this.getPosition(parent);
     const translatedPoint = {
       x: point.x - parentOffset.x,
@@ -50,7 +50,7 @@ export class AppComponent {
     };
     const w = parent.clientWidth;
     const h = parent.clientHeight;
-    const center = { x: w / 2, y: h / 2 };
+    const center = { x: w / 2, y: h / 2 }; 
     // cartesian point
     const cPoint = { x: translatedPoint.x, y: h - translatedPoint.y };
     const rad = Math.atan2(cPoint.y - center.y, cPoint.x - center.x);
