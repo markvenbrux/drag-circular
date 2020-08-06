@@ -25,7 +25,7 @@ export class AppComponent {
   public ngAfterContentChecked(): void {
     //if (this.radius === 0) {
     this.radius = this.getRadiusOfVisualDragHandle();
-    console.log(`radius ${this.radius}`)
+    console.log(`radius ${this.radius}`);
     this.positionDragHandleOnCircle();
     //}
   }
@@ -49,17 +49,12 @@ export class AppComponent {
     ) as HTMLElement;
     const parentRect = parent.getBoundingClientRect();
     const parentCenter = this.getCenter(parent);
-    const vector = {
+    // cartesian vector
+    const cVector = {
       x: point.x - parentCenter.x,
-      y: point.y - parentCenter.y
+      y: parentCenter.y - point.y // y coordinate is flipped in pixel coordinates
     };
-
-    // cartesian point
-    const cVector = { x: vector.x, y: parentRect.height - vector.y };
-    const rad = Math.atan2(
-      cVector.y - parentCenter.y,
-      cVector.x - parentCenter.x
-    );
+    const rad = Math.atan2(cVector.y, cVector.x);
     // viewer point on circle, translated back
     const intersectionPoint = {
       x: parentCenter.x + this.radius * Math.cos(rad),
@@ -74,7 +69,7 @@ export class AppComponent {
     // notify change in angle
     this.deg = (rad * 180) / Math.PI;
     this.deg$.next(this.deg);
-    this.positionDragHandleOnCircle();
+    //this.positionDragHandleOnCircle();
 
     return intersectionPoint;
   };
