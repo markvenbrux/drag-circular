@@ -5,7 +5,7 @@ import {
   EventEmitter,
   ViewChild
 } from "@angular/core";
-import { CdkDrag, DragRef } from "@angular/cdk/drag-drop";
+import { CdkDrag, DragRef, Point } from "@angular/cdk/drag-drop";
 import { Point } from "@angular/cdk/drag-drop/typings/drag-ref";
 import { Subscription, Subject } from "rxjs";
 @Component({
@@ -84,7 +84,7 @@ export class AppComponent {
     return { x: x, y: y };
   }
 
-  getCenter(el: HTMLElement): Point {
+  private getCenter(el: HTMLElement): Point {
     const rect = el.getBoundingClientRect();
     const center = {
       x: rect.left + rect.width / 2,
@@ -93,7 +93,7 @@ export class AppComponent {
     return center;
   }
 
-  getVector(el1: HTMLElement, el2: HTMLElement): Point {
+  private getVector(el1: HTMLElement, el2: HTMLElement): Point {
     if (el1 && el2) {
       const center1 = this.getCenter(el1);
       const center2 = this.getCenter(el2);
@@ -104,18 +104,14 @@ export class AppComponent {
       return vector;
     }
   }
-  getRadiusOfVisualDragHandle(): number {
+  private getRadiusOfVisualDragHandle(): number {
     const parent = document.getElementById("containerId");
     const visualDragHandle = document.getElementById("visualDragHandleId");
     const v = this.getVector(parent, visualDragHandle);
     return Math.sqrt(v.x * v.x + v.y * v.y);
   }
 
-  increment() {
-    this.deg += 45;
-    this.positionDragHandleOnCircle();
-  }
-  positionDragHandleOnCircle() {
+  private positionDragHandleOnCircle() {
     const rad = (this.deg / 180) * Math.PI;
     const parent = document.getElementById("containerId");
     const d = document.getElementById("dragHandleId");
@@ -131,5 +127,9 @@ export class AppComponent {
         y: y - d.clientHeight / 2
       };
     }
+  }
+  private increment() {
+    this.deg += 45;
+    this.positionDragHandleOnCircle();
   }
 }
