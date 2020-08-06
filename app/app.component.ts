@@ -17,11 +17,13 @@ export class AppComponent {
   public deg$ = new Subject<number>();
 
   @Output()
-  public deg = 0;
+  public deg = 90;
+  public radius = 0;
   @Output()
   public currentPosition = { x: 0, y: 0 };
   public ngAfterViewInit(): void {
-    this.increment();
+    this.radius = this.getRadiusOfVisualDragHandle();
+    this.positionDragHandleOnCircle();
   }
   /**
    * Customize the logic of how the position of the drag item is limited while it's being dragged.
@@ -41,7 +43,6 @@ export class AppComponent {
     point: Point,
     dragRef: DragRef
   ): Point => {
-    //const parent = dragRef.data.element.nativeElement.parentElement;
     const parent = document.getElementById("containerId");
     const parentOffset = this.getPosition(parent);
     const translatedPoint = {
@@ -51,18 +52,16 @@ export class AppComponent {
     const w = parent.clientWidth;
     const h = parent.clientHeight;
     const center = { x: w / 2, y: h / 2 };
-    //const radius = Math.min(w, h) * 0.3; // align with position of white dot
-    const radius = this.getRadius();
     // cartesian point
     const cPoint = { x: translatedPoint.x, y: h - translatedPoint.y };
     const rad = Math.atan2(cPoint.y - center.y, cPoint.x - center.x);
     // viewer point on circle
     const intersectionPoint = {
-      x: center.x + radius * Math.cos(rad) + parentOffset.x,
-      y: center.y - radius * Math.sin(rad) + parentOffset.y
+      x: center.x + this.radius * Math.cos(rad) + parentOffset.x,
+      y: center.y - this.radius * Math.sin(rad) + parentOffset.y
     };
     console.log(
-      `P radius ${radius} center ${center.x}, ${center.x} new pos: ${
+      `P deg ${this.deg} center ${center.x}, ${center.x} new pos: ${
         intersectionPoint.x
       } ${intersectionPoint.y}`
     );
@@ -71,7 +70,7 @@ export class AppComponent {
     this.deg = (rad * 180) / Math.PI;
     this.deg$.next(this.deg);
     this.positionDragHandleOnCircle();
-    return point;
+    return intersectionPoint;
   };
 
   private getPosition(el: HTMLElement): Point {
@@ -85,26 +84,31 @@ export class AppComponent {
     return { x: x, y: y };
   }
 
-  getRadius(): number {
+  getCenter(el: HTMLElement): Point {
+    const rect = el.getBoundingClientRect();
+    const center = {
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2
+    };
+    return center;
+  }
+
+  getVector(el1: HTMLElement, el2: HTMLElement): Point {
+    if (el1 && el2) {
+      const center1 = this.getCenter(el1);
+      const center2 = this.getCenter(el2);
+      const vector = {
+        x: center2.x - center1.x,
+        y: center2.y - center1.y
+      };
+      return vector;
+    }
+  }
+  getRadiusOfVisualDragHandle(): number {
     const parent = document.getElementById("containerId");
     const visualDragHandle = document.getElementById("visualDragHandleId");
-    if (parent && visualDragHandle) {
-      const pRect = parent.getBoundingClientRect();
-      const center = {
-        x: pRect.left + pRect.width / 2,
-        y: pRect.top + pRect.height / 2
-      };
-      const vRect = visualDragHandle.getBoundingClientRect();
-      const p = {
-        x: vRect.left + vRect.width / 2,
-        y: vRect.top + vRect.height / 2
-      };
-      const v = {
-        x: p.x - center.x,
-        y: p.y - center.y
-      };
-      return Math.sqrt(v.x * v.x + v.y * v.y);
-    }
+    const v = this.getVector(parent, visualDragHandle);
+    return Math.sqrt(v.x * v.x + v.y * v.y);
   }
 
   increment() {
@@ -119,15 +123,13 @@ export class AppComponent {
       const w = parent.clientWidth;
       const h = parent.clientHeight;
       const center = { x: parent.clientWidth / 2, y: parent.clientHeight / 2 };
-      //const radius = Math.min(w, h) * 0.43; // align with position of white dot
-      const radius = this.getRadius();
-      const x = center.x + radius * Math.cos(rad);
-      const y = center.y - radius * Math.sin(rad);
+      const x = center.x + this.radius * Math.cos(rad);
+      const y = center.y - this.radius * Math.sin(rad);
 
-      console.log(
-        `I radius ${radius} center ${center.x}, ${center.x} new pos: ${x} ${y}`
-      );
-      this.currentPosition = { x: x - 20, y: y - 20 };
+      this.currentPosition = {
+        x: x - d.clientWidth / 2,
+        y: y - d.clientHeight / 2
+      };
     }
   }
 }
