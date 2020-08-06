@@ -23,7 +23,6 @@ export class AppComponent {
   public ngAfterViewInit(): void {
     this.increment();
   }
-
   /**
    * Customize the logic of how the position of the drag item is limited while it's being dragged.
    * @param  point current position of the user's pointer on the page
@@ -52,20 +51,27 @@ export class AppComponent {
     const w = parent.clientWidth;
     const h = parent.clientHeight;
     const center = { x: w / 2, y: h / 2 };
-    const radius = Math.min(w, h) * 0.3; // align with position of white dot
+    //const radius = Math.min(w, h) * 0.3; // align with position of white dot
+    const radius = this.getRadius();
     // cartesian point
     const cPoint = { x: translatedPoint.x, y: h - translatedPoint.y };
     const rad = Math.atan2(cPoint.y - center.y, cPoint.x - center.x);
     // viewer point on circle
     const intersectionPoint = {
-      x: center.x + radius * Math.cos(rad) + parentOffset.x - 20,
-      y: center.y - radius * Math.sin(rad) + parentOffset.y - 20
+      x: center.x + radius * Math.cos(rad) + parentOffset.x,
+      y: center.y - radius * Math.sin(rad) + parentOffset.y
     };
+    console.log(
+      `P radius ${radius} center ${center.x}, ${center.x} new pos: ${
+        intersectionPoint.x
+      } ${intersectionPoint.y}`
+    );
 
     // notify change in angle
     this.deg = (rad * 180) / Math.PI;
     this.deg$.next(this.deg);
-    return intersectionPoint;
+    this.positionDragHandleOnCircle();
+    return point;
   };
 
   private getPosition(el: HTMLElement): Point {
@@ -79,21 +85,44 @@ export class AppComponent {
     return { x: x, y: y };
   }
 
+  getRadius(): number {
+    const parent = document.getElementById("containerId");
+    const visualDragHandle = document.getElementById("visualDragHandleId");
+    if (parent && visualDragHandle ) {
+      const center = { x: parent.clientWidth / 2, y: parent.clientHeight / 2 };
+      const p = {
+        x: visualDragHandle.offsetLeft - visualDragHandle.clientWidth / 2,
+        y: visualDragHandle.offsetTop - visualDragHandle.clientHeight / 2
+      };
+      const v = {
+        x: p.x - center.x,
+        y: p.y - center.y
+      };
+      return Math.sqrt(v.x * v.x + v.y * v.y);
+    }
+  }
+
   increment() {
-    this.deg += 1;
+    this.deg += 45;
+    this.positionDragHandleOnCircle();
+  }
+  positionDragHandleOnCircle() {
     const rad = (this.deg / 180) * Math.PI;
     const parent = document.getElementById("containerId");
     const d = document.getElementById("dragHandleId");
     if (parent && d) {
       const w = parent.clientWidth;
       const h = parent.clientHeight;
-      const center = { x: w / 2, y: h / 2 };
-      const radius = Math.min(w, h) * 0.3; // align with position of white dot
-      const x = +radius * Math.cos(rad) - d.clientWidth;
-      const y = -radius * Math.sin(rad) - d.clientHeight;
+      const center = { x: parent.clientWidth / 2, y: parent.clientHeight / 2 };
+      //const radius = Math.min(w, h) * 0.43; // align with position of white dot
+      const radius = this.getRadius();
+      const x = center.x + radius * Math.cos(rad);
+      const y = center.y - radius * Math.sin(rad);
 
-      console.log(`center ${center.x}, ${center.x} new pos: ${x} ${y}`);
-      this.currentPosition = { x: x, y: y };
+      console.log(
+        `I radius ${radius} center ${center.x}, ${center.x} new pos: ${x} ${y}`
+      );
+      this.currentPosition = { x: x - 20, y: y - 20 };
     }
   }
 }
