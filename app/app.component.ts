@@ -88,11 +88,16 @@ export class AppComponent {
   getRadius(): number {
     const parent = document.getElementById("containerId");
     const visualDragHandle = document.getElementById("visualDragHandleId");
-    if (parent && visualDragHandle && visualDragHandle.offsetLeft) {
-      const center = { x: parent.clientWidth / 2, y: parent.clientHeight / 2 };
+    if (parent && visualDragHandle) {
+      const pRect = parent.getBoundingClientRect();
+      const center = {
+        x: pRect.left + pRect.width / 2,
+        y: pRect.top + pRect.height / 2
+      };
+      const vRect = visualDragHandle.getBoundingClientRect();
       const p = {
-        x: visualDragHandle.offsetLeft - visualDragHandle.clientWidth / 2,
-        y: visualDragHandle.offsetTop - visualDragHandle.clientHeight / 2
+        x: vRect.left + vRect.width / 2,
+        y: vRect.top + vRect.height / 2
       };
       const v = {
         x: p.x - center.x,
